@@ -292,10 +292,8 @@ private:
 		}
 
 		// 맵 섞고 난 후 캐릭터 위치 설정
-		setPrevX(posX);
-		setPrevY(posY);
-		setPosX(posX);
-		setPosY(posY);
+		setPrevXY(posX, posY);
+		setPosXY(posX, posY);
 	}
 
 	// 맵을 출력한다
@@ -336,9 +334,6 @@ public:
 	}
 
 	NumberPuzzle(int size, int timesToMix) {
-		// 랜덤한 숫자 때문에 필요
-		srand((unsigned int)time(NULL));
-
 		// 처음 맵 크기 설정하기
 		setSize(size);
 		newMap(getMapSize());
@@ -357,15 +352,17 @@ public:
 	~NumberPuzzle() {
 		// 메모리 해제 필수! (누수 방지)
 		delete puzzleMap;
+		puzzleMap = nullptr;
 	}
 
 	// 게임 초기화
 	void initGame(int *map, int timesToMix) {
 
+		int i;
 		int mapSize = getMapSize();
 		// 마지막 공백 비우기
 		// 이유: 특수한 값을 사용할 것임
-		for (int i = 0; i < mapSize - 1; i++) {
+		for (i = 0; i < mapSize - 1; i++) {
 			map[i] = i + 1;
 		}
 
@@ -542,7 +539,16 @@ public:
 
 int main(void)
 {
-	NumberPuzzle game = NumberPuzzle(3, 1000);
-	game.playGame();
+	// 랜덤한 숫자 때문에 필요
+	srand((unsigned int)time(NULL));
+
+	int count = 3;
+
+	while (true) {
+		NumberPuzzle game = NumberPuzzle(count, 10000);
+		game.playGame();
+
+		count++;
+	}
 	return 0;
 }
